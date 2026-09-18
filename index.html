@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruang Tenang - Media Refleksi & Kesehatan Mental Siswa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sage-green: #7ca982;
+            --sage-light: #e8f0ec;
+            --sage-dark: #5a8160;
+            --soft-blue: #e3edf7;
+            --blue-accent: #4a90e2;
+            --cream-bg: #fcfbf9;
+            --text-main: #2c3e35;
+            --text-muted: #6b7c73;
+            --white: #ffffff;
+            --shadow: 0 10px 25px rgba(124, 169, 130, 0.08);
+            --radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--cream-bg);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR NAVIGASI */
+        sidebar {
+            width: 280px;
+            background-color: var(--white);
+            border-right: 1px solid rgba(124, 169, 130, 0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 24px;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.02);
+            z-index: 10;
+        }
+
+        .brand-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+            padding-left: 8px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--sage-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .brand-title h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--sage-dark);
+        }
+
+        .brand-title p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: var(--sage-light);
+            color: var(--sage-dark);
+            font-weight: 600;
+        }
+
+        .nav-item span {
+            font-size: 1.15rem;
+        }
+
+        /* Bagian Bawah Sidebar: Login Guru */
+        .sidebar-footer {
+            border-top: 1px solid #eee;
+            padding-top: 16px;
+        }
+
+        .teacher-login-btn {
+            width: 100%;
+            background-color: var(--soft-blue);
+            color: #2b5c8f;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .teacher-login-btn:hover {
+            background-color: #d2e4f7;
+        }
+
+        /* MAIN CONTENT AREA */
+        main {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 40px;
+            position: relative;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* KARTU & KOMPONEN UMUM */
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(124, 169, 130, 0.1);
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--sage-dark);
+            margin-bottom: 12px;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        /* BERANDA */
+        .hero-banner {
+            background: linear-gradient(135deg, var(--sage-light), #f4f8f5);
+            border-radius: var(--radius);
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            border: 1px solid rgba(124, 169, 130, 0.2);
+        }
+
+        .hero-text h3 {
+            font-size: 1.8rem;
+            color: var(--sage-dark);
+            margin-bottom: 10px;
+        }
+
+        .hero-text p {
+            color: var(--text-muted);
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .quick-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .quick-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--sage-green);
+        }
+
+        .quick-card h4 {
+            color: var(--sage-dark);
+            margin-bottom: 6px;
+        }
+
+        .quick-card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* CHECK-IN EMOSI */
+        .mood-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .mood-btn {
+            background: var(--cream-bg);
+            border: 2px solid transparent;
+            border-radius: 14px;
+            padding: 20px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .mood-btn span {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .mood-btn span.label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .mood-btn:hover {
+            background: var(--sage-light);
+            border-color: var(--sage-green);
+            transform: scale(1.03);
+        }
+
+        /* JURNAL REFLEKSI */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        textarea, input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid #dcdcdc;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.2s;
+            background-color: #faf9f6;
+        }
+
+        textarea:focus, input:focus {
+            border-color: var(--sage-green);
+            background-color: var(--white);
+            box-shadow: 0 0 0 3px rgba(124, 169, 130, 0.15);
+        }
+
+        textarea {
+            height: 180px;
+            resize: vertical;
+        }
+
+        .btn-primary {
+            background-color: var(--sage-green);
+            color: var(--white);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--sage-dark);
+        }
+
+        .success-msg {
+            margin-top: 12px;
+            color: var(--sage-dark);
+            font-weight: 500;
+            display: none;
+        }
+
+        /* POJOK TENANG (MINDFULNESS) */
+        .breathing-box {
+            text-align: center;
+            padding: 40px;
+            background: var(--sage-light);
+            border-radius: var(--radius);
+            margin-top: 20px;
+        }
+
+        .circle-breath {
+            width: 150px;
+            height: 150px;
+            background-color: var(--sage-green);
+            border-radius: 50%;
+            margin: 0 auto 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 25px rgba(90, 129, 96, 0.3);
+            transition: transform 4s ease-in-out;
+        }
+
+        .breathing-controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        /* MODAL POP-UP VALIDASI EMOSI */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: var(--white);
+            width: 90%;
+            max-width: 520px;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            text-align: center;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-card {
+            transform: translateY(0);
+        }
+
+        .modal-emoji {
+            font-size: 3.5rem;
+            margin-bottom: 12px;
+        }
+
+        .modal-card h3 {
+            color: var(--sage-dark);
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+
+        .modal-card p {
+            color: var(--text-main);
+            font-size: 0.98rem;
+            line-height: 1.7;
+            margin-bottom: 25px;
+            text-align: left;
+            background: var(--cream-bg);
+            padding: 16px;
+            border-radius: 12px;
+            border-left: 4px solid var(--sage-green);
+        }
+
+        .modal-close-btn {
+            background-color: var(--sage-green);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* MODAL LOGIN GURU */
+        .login-modal-card {
+            background: var(--white);
+            width: 90%;
+            max-width: 400px;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            text-align: left;
+        }
+        
+        .login-modal-card h3 {
+            color: #2b5c8f;
+            margin-bottom: 8px;
+        }
+
+        .login-error {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            display: none;
+        }
+
+        /* RESPONSIVE */
+        @media(max-width: 768px) {
+            body { flex-direction: column; height: auto; }
+            sidebar { width: 100%; height: auto; padding: 16px; }
+            .mood-container { grid-template-columns: repeat(3, 1fr); }
+            .quick-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR NAVIGASI -->
+    <sidebar>
+        <div>
+            <div class="brand-area">
+                <div class="brand-icon">🌱</div>
+                <div class="brand-title">
+                    <h1>Ruang Tenang</h1>
+                    <p>Pojok Refleksi & BK Siswa</p>
+                </div>
+            </div>
+
+            <div class="nav-links">
+                <a href="#" class="nav-item active" onclick="switchTab('beranda', event)">
+                    <span>🏠</span> Beranda
+                </a>
+                <a href="#" class="nav-item" onclick="switchTab('checkin', event)">
+                    <span>😊</span> Check-in Emosi
+                </a>
+                <a href="#" class="nav-item" onclick="switchTab('jurnal', event)">
+                    <span>📖</span> Jurnal Refleksi
+                </a>
+                <a href="#" class="nav-item" onclick="switchTab('mindfulness', event)">
+                    <span>🧘</span> Pojok Tenang
+                </a>
+                <a href="#" class="nav-item" onclick="switchTab('bantuan', event)">
+                    <span>💬</span> Bantuan BK
+                </a>
+            </div>
+        </div>
+
+        <!-- Tombol Akses Masuk Guru di Kiri Bawah -->
+        <div class="sidebar-footer">
+            <button class="teacher-login-btn" onclick="openTeacherLogin()">
+                <span>🔒</span> Akun Masuk Guru
+            </button>
+        </div>
+    </sidebar>
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+        <!-- 1. BERANDA -->
+        <div id="beranda" class="tab-content active">
+            <div class="hero-banner">
+                <div class="hero-text">
+                    <h3>Halo, Sahabat Ruang Tenang! ✨</h3>
+                    <p>Tempat yang aman dan nyaman untuk mengenali perasaanmu, melatih ketenangan, serta terhubung dengan layanan bimbingan konseling sekolah.</p>
+                </div>
+                <div style="font-size: 4rem;">🌿</div>
+            </div>
+
+            <div class="card">
+                <h2>Pintasan Cepat</h2>
+                <p class="subtitle">Pilih menu di bawah ini untuk memulai aktivitas harianmu.</p>
+                <div class="quick-grid">
+                    <div class="quick-card" onclick="switchTab('checkin', {preventDefault:()=>{}})">
+                        <h4>Cek Emosi Hari Ini</h4>
+                        <p>Bagikan perasaanmu secara jujur tanpa rasa takut dihakimi.</p>
+                    </div>
+                    <div class="quick-card" onclick="switchTab('jurnal', {preventDefault:()=>{}})">
+                        <h4>Tulis Ceritaku</h4>
+                        <p>Curahkan uneg-uneg atau refleksi harianmu di jurnal privat.</p>
+                    </div>
+                    <div class="quick-card" onclick="switchTab('mindfulness', {preventDefault:()=>{}})">
+                        <h4>Latihan Pernapasan</h4>
+                        <p>Tenangkan pikiran yang cemas dengan panduan visual interaktif.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. CHECK-IN EMOSI -->
+        <div id="checkin" class="tab-content">
+            <div class="card">
+                <h2>Check-in Emosi Harian</h2>
+                <p class="subtitle">Bagaimana perasaan dominan yang sedang kamu alami saat ini? Klik salah satu ekspresi di bawah ini untuk mendapatkan ruang validasi dan dukungan moral.</p>
+                
+                <div class="mood-container">
+                    <button class="mood-btn" onclick="showMoodValidation('senang')">
+                        <span>😊</span>
+                        <span class="label">Senang</span>
+                    </button>
+                    <button class="mood-btn" onclick="showMoodValidation('cemas')">
+                        <span>😰</span>
+                        <span class="label">Cemas</span>
+                    </button>
+                    <button class="mood-btn" onclick="showMoodValidation('sedih')">
+                        <span>😢</span>
+                        <span class="label">Sedih</span>
+                    </button>
+                    <button class="mood-btn" onclick="showMoodValidation('lelah')">
+                        <span>😫</span>
+                        <span class="label">Lelah</span>
+                    </button>
+                    <button class="mood-btn" onclick="showMoodValidation('marah')">
+                        <span>😡</span>
+                        <span class="label">Marah</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. JURNAL REFLEKSI -->
+        <div id="jurnal" class="tab-content">
+            <div class="card">
+                <h2>Jurnal Refleksi ("Ceritaku")</h2>
+                <p class="subtitle">Tuliskan apa yang ada di pikiranmu hari ini. Tempat ini aman, rahasia, dan ditulis untuk membantumu meredakan beban perasaan.</p>
+                
+                <div class="form-group">
+                    <label for="studentName">Nama Lengkap & Kelas (Opsional):</label>
+                    <input type="text" id="studentName" placeholder="Contoh: Rina / Kelas 8A">
+                </div>
+
+                <div class="form-group">
+                    <label for="journalText">Ceritakan harimu di sini...</label>
+                    <textarea id="journalText" placeholder="Apa hal yang membuatmu senang, tertekan, atau lelah hari ini? Tuliskan dengan bebas..."></textarea>
+                </div>
+
+                <button class="btn-primary" onclick="saveJournal()">Simpan Jurnal</button>
+                <p id="successMsg" class="success-msg">✨ Jurnal berhasil tersimpan secara lokal. Terima kasih sudah mau jujur pada dirimu sendiri hari ini!</p>
+            </div>
+        </div>
+
+        <!-- 4. POJOK TENANG (MINDFULNESS) -->
+        <div id="mindfulness" class="tab-content">
+            <div class="card">
+                <h2>Pojok Tenang (Box Breathing)</h2>
+                <p class="subtitle">Teknik pernapasan sederhana untuk menstabilkan detak jantung dan meredakan kecemasan instan di tengah kesibukan sekolah.</p>
+                
+                <div class="breathing-box">
+                    <div id="breathCircle" class="circle-breath">Mulai</div>
+                    <p id="breathInstruction" style="margin-bottom: 20px; font-weight: 600; color: var(--sage-dark);">Tekan tombol mulai untuk mengatur ritme napasmu.</p>
+                    <div class="breathing-controls">
+                        <button class="btn-primary" onclick="startBreathing()">Mulai Latihan (1 Menit)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. BANTUAN BK (TERINTEGRASI GOOGLE FORM) -->
+        <div id="bantuan" class="tab-content">
+            <div class="card">
+                <h2>Layanan Konseling & Bantuan BK</h2>
+                <p class="subtitle">Kamu tidak harus menghadapi semuanya sendirian. Guru BK siap mendengarkan dan mendampingimu dengan penuh kerahasiaan.</p>
+                
+                <div style="background: var(--sage-light); padding: 24px; border-radius: 12px; border-left: 5px solid var(--sage-green);">
+                    <h3 style="color: var(--sage-dark); margin-bottom: 8px;">Jadwal Konseling & Janji Temu</h3>
+                    <p style="margin-bottom: 16px; color: var(--text-main);">Jika kamu ingin bercerita, berkonsultasi, atau menjadwalkan sesi pertemuan dengan Guru BK, silakan mengisi formulir di bawah ini. Tenang saja, data dan cerita kamu dijamin kerahasiaannya!</p>
+                    <a href="https://forms.gle/9tAzoaQ7vwHcJS6EA" target="_blank" style="display: inline-block; background-color: var(--sage-green); color: white; padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: 600; box-shadow: 0 4px 10px rgba(124, 169, 130, 0.3);">📝 Isi Formulir Bantuan & Janji Temu BK</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- DASBOR GURU (Tersembunyi Awalnya) -->
+        <div id="teacherDashboard" class="tab-content">
+            <div class="card" style="border-top: 5px solid #2b5c8f;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>Dasbor Guru BK</h2>
+                    <button class="btn-primary" style="background-color: #e74c3c; padding: 6px 14px;" onclick="switchTab('beranda', event)">Keluar Dasbor</button>
+                </div>
+                <p class="subtitle">Panel rekapitulasi data masuk dari siswa untuk keperluan monitoring kesejahteraan mental (Well-being).</p>
+                
+                <div style="background: #f4f8fb; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                    <h4 style="color: #2b5c8f; margin-bottom: 8px;">📊 Ringkasan Aktivitas Hari Ini</h4>
+                    <p>Total Check-in Emosi Masuk: <strong>14 Siswa</strong></p>
+                    <p>Total Jurnal Tersimpan: <strong id="journalCountDisplay">0</strong> Jurnal</p>
+                </div>
+
+                <h3 style="font-size: 1.1rem; margin-bottom: 10px; color: var(--text-main);">Arsip Jurnal Refleksi Siswa Terbaru:</h3>
+                <div id="journalArchiveList" style="background: white; border: 1px solid #ddd; border-radius: 10px; padding: 15px; max-height: 250px; overflow-y: auto;">
+                    <p style="color: var(--text-muted); font-style: italic;">Belum ada catatan jurnal baru yang dimuat dalam sesi ini.</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODAL POP-UP VALIDASI EMOSI -->
+    <div id="moodModal" class="modal-overlay" onclick="closeMoodModal(event)">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <div id="modalEmoji" class="modal-emoji">😊</div>
+            <h3 id="modalTitle">Validasi Emosi</h3>
+            <p id="modalText">Pesan suportif akan muncul di sini...</p>
+            <button class="modal-close-btn" onclick="closeMoodModalDirect()">Terima Kasih, Saya Merasa Leganya</button>
+        </div>
+    </div>
+
+    <!-- MODAL LOGIN GURU -->
+    <div id="loginModal" class="modal-overlay" onclick="closeTeacherLogin(event)">
+        <div class="login-modal-card" onclick="event.stopPropagation()">
+            <h3 style="color: #2b5c8f;">🔐 Autentikasi Guru BK</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Masukkan kata sandi akses khusus pengajar untuk membuka dasbor.</p>
+            
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label for="teacherPass" style="font-size: 0.85rem;">Kata Sandi:</label>
+                <input type="password" id="teacherPass" placeholder="Masukkan sandi...">
+                <p id="loginError" class="login-error">Kata sandi salah! Coba gunakan: gurubk123</p>
+            </div>
+
+            <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                <button class="btn-primary" style="background-color: #95a5a6; padding: 8px 16px; font-size: 0.85rem;" onclick="closeTeacherLoginDirect()">Batal</button>
+                <button class="btn-primary" style="background-color: #2b5c8f; padding: 8px 16px; font-size: 0.85rem;" onclick="validateTeacherLogin()">Masuk</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const validationMessages = {
+            senang: {
+                title: "Wah, ikut senang mendengarnya! ✨",
+                emoji: "😊",
+                text: "Energi positif yang luar biasa! Kebahagiaan dan ketenangan yang kamu rasakan hari ini adalah hal yang sangat berharga. Ingatlah untuk merayakan momen baik ini dan membagikan energi hangatmu kepada orang-orang di sekitarmu. Terus pertahankan semangat belajarmu, ya!"
+            },
+            cemas: {
+                title: "Tarik napas dalam-dalam, kamu tidak sendirian. 🫂",
+                emoji: "😰",
+                text: "Perasaan cemas atau khawatir yang sedang kamu hadapi saat ini adalah hal yang sangat wajar dialami oleh seorang remaja. Pikiranmu mungkin sedang memikirkan banyak hal sekaligus. Cobalah untuk fokus pada apa yang bisa kamu kendalikan saat ini. Ingat, kamu kuat, dan situasi ini pasti akan berlalu seiring berjalannya waktu."
+            },
+            sedih: {
+                title: "Validasi air matamu, tidak apa-apa untuk merasa sedih. 🌧️",
+                emoji: "😢",
+                text: "Setiap orang berhak merasa sedih, dan kamu tidak harus selalu terlihat kuat di hadapan semua orang. Berikan dirimu waktu dan ruang untuk beristirahat sejenak. Kesedihan ini bukan tanda kelemahan, melainkan bukti bahwa hatimu sangat peduli. Jika butuh teman bicara, pintu ruang BK selalu terbuka untukmu."
+            },
+            lelah: {
+                title: "Tubuh dan pikiranmu butuh jeda sejenak. 🌿",
+                emoji: "😫",
+                text: "Kamu sudah bekerja sangat keras akhir-akhir ini, baik secara akademik maupun sosial. Kelelahan fisik dan mental adalah sinyal dari tubuhmu untuk berhenti sejenak dan beristirahat. Jangan memaksakan diri terlalu keras. Lepaskan sejenak buku dan bebanmu, lalu nikmati waktu istirahat yang berkualitas hari ini."
+            },
+            marah: {
+                title: "Emosimu valid, mari kita kelola bersama. 🔥",
+                emoji: "😡",
+                text: "Merasa kesal, jengkel, atau marah adalah respons emosional manusiawi saat situasi tidak berjalan sesuai harapan. Yang terpenting adalah bagaimana kita meresponsnya tanpa merugikan diri sendiri atau orang lain. Cobalah menjauh sejenak dari pemicu kemarahan, minum air putih, dan biarkan amarahmu mereda secara perlahan."
+            }
+        };
+
+        function switchTab(tabId, event) {
+            event.preventDefault();
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            
+            const targetNav = Array.from(document.querySelectorAll('.nav-item')).find(item => item.getAttribute('onclick')?.includes(tabId));
+            if(targetNav) targetNav.classList.add('active');
+        }
+
+        function showMoodValidation(moodKey) {
+            const data = validationMessages[moodKey];
+            document.getElementById('modalEmoji').innerText = data.emoji;
+            document.getElementById('modalTitle').innerText = data.title;
+            document.getElementById('modalText').innerText = data.text;
+            document.getElementById('moodModal').classList.add('show');
+        }
+
+        function closeMoodModal(event) {
+            if(event.target.id === 'moodModal') {
+                document.getElementById('moodModal').classList.remove('show');
+            }
+        }
+
+        function closeMoodModalDirect() {
+            document.getElementById('moodModal').classList.remove('show');
+        }
+
+        let savedJournalsCount = 0;
+        function saveJournal() {
+            const text = document.getElementById('journalText').value;
+            const name = document.getElementById('studentName').value || 'Anonim';
+            const msg = document.getElementById('successMsg');
+            
+            if(text.trim() === "") {
+                alert("Tolong tuliskan sesuatu di jurnal sebelum disimpan ya!");
+                return;
+            }
+
+            savedJournalsCount++;
+            document.getElementById('journalCountDisplay').innerText = savedJournalsCount;
+            
+            const archiveList = document.getElementById('journalArchiveList');
+            if(savedJournalsCount === 1) archiveList.innerHTML = "";
+            
+            archiveList.innerHTML += `<div style="border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 8px;">
+                <strong>${name}</strong>: "${text.substring(0, 60)}..."
+            </div>`;
+
+            msg.style.display = 'block';
+            document.getElementById('journalText').value = '';
+            setTimeout(() => { msg.style.display = 'none'; }, 4000);
+        }
+
+        let breathInterval;
+        function startBreathing() {
+            const circle = document.getElementById('breathCircle');
+            const instruction = document.getElementById('breathInstruction');
+            
+            let phase = 0;
+            const instructions = [
+                { text: "Tarik Napas (Inhale)...", scale: "scale(1.4)", bg: "#7ca982" },
+                { text: "Tahan Napas (Hold)...", scale: "scale(1.4)", bg: "#5a8160" },
+                { text: "Hembuskan Perlahan (Exhale)...", scale: "scale(1)", bg: "#7ca982" },
+                { text: "Istirahat (Rest)...", scale: "scale(1)", bg: "#8fb895" }
+            ];
+
+            instruction.innerText = instructions[0].text;
+            circle.style.transform = instructions[0].scale;
+            circle.style.backgroundColor = instructions[0].bg;
+
+            if(window.activeBreathTimer) clearInterval(window.activeBreathTimer);
+
+            let step = 1;
+            window.activeBreathTimer = setInterval(() => {
+                const current = instructions[step % 4];
+                instruction.innerText = current.text;
+                circle.style.transform = current.scale;
+                circle.style.backgroundColor = current.bg;
+                step++;
+            }, 4000);
+        }
+
+        function openTeacherLogin() {
+            document.getElementById('loginModal').classList.add('show');
+            document.getElementById('teacherPass').value = '';
+            document.getElementById('loginError').style.display = 'none';
+        }
+
+        function closeTeacherLogin(event) {
+            if(event.target.id === 'loginModal') {
+                document.getElementById('loginModal').classList.remove('show');
+            }
+        }
+
+        function closeTeacherLoginDirect() {
+            document.getElementById('loginModal').classList.remove('show');
+        }
+
+        function validateTeacherLogin() {
+            const pass = document.getElementById('teacherPass').value;
+            if(pass === "gurubk123") {
+                document.getElementById('loginModal').classList.remove('show');
+                document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+                document.getElementById('teacherDashboard').classList.add('active');
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
