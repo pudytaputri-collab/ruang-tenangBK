@@ -450,10 +450,11 @@
             display: none;
         }
 
-        /* RESPONSIVE */
+        /* RESPONSIVE & MOBILE SCROLL FIX */
         @media(max-width: 768px) {
-            body { flex-direction: column; height: auto; }
+            body { flex-direction: column; height: auto; overflow: auto; }
             sidebar { width: 100%; height: auto; padding: 16px; }
+            main { overflow-y: visible; height: auto; }
             .mood-container { grid-template-columns: repeat(3, 1fr); }
             .quick-grid { grid-template-columns: 1fr; }
         }
