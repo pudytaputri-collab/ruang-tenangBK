@@ -134,7 +134,7 @@
             gap: 6px;
         }
         .sound-btn:hover { background: rgba(255, 255, 255, 0.35); }
-        .sound-btn.playing { background: #52B788; border-color: #fff; font-weight: 600; }
+        .sound-btn.playing { background: #52B788; border-color: #fff; font-weight: 600; box-shadow: 0 0 15px rgba(82, 183, 136, 0.5); }
 
         header h1 {
             font-size: 2.1rem;
@@ -164,7 +164,7 @@
             gap: 10px;
         }
 
-        /* Grid 2 Kolom untuk layar besar */
+        /* Grid 2 Kolom */
         .grid-2 {
             display: grid;
             grid-template-columns: 1.15fr 0.85fr;
@@ -471,7 +471,7 @@
             transform: translateY(-2px);
         }
 
-        /* Dashboard Guru BK Styling */
+        /* Dashboard Guru BK */
         .dashboard-box {
             max-width: 880px;
             text-align: left;
@@ -561,14 +561,13 @@
 </head>
 <body>
 
-    <!-- Dekorasi Cahaya Latar -->
     <div class="ambient-blob blob-1"></div>
     <div class="ambient-blob blob-2"></div>
 
     <!-- TOMBOL DASHBOARD POJOK KIRI BAWAH -->
     <a href="#" class="dashboard-fab" onclick="openPassModal(); return false;">🔒 Dashboard</a>
 
-    <!-- MODAL 1: IDENTITAS SISWA (WAJIB DIISI SAAT MASUK) -->
+    <!-- MODAL 1: IDENTITAS SISWA -->
     <div id="identity-modal" class="modal-overlay">
         <div class="modal-box">
             <div style="font-size: 3rem; margin-bottom: 8px;">🌿</div>
@@ -605,22 +604,22 @@
         </div>
     </div>
 
-    <!-- MODAL 3: DASHBOARD PEMANTAUAN GURU BK -->
+    <!-- MODAL 3: DASHBOARD PEMANTAUAN GURU BK (TERHUBUNG KE GOOGLE SHEETS) -->
     <div id="dashboard-modal" class="modal-overlay hidden">
         <div class="modal-box dashboard-box">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <h2 style="color: var(--primary); font-size: 1.35rem;">📊 Dashboard Pemantauan Kesejahteraan Siswa</h2>
-                    <p style="font-size: 0.82rem; color: var(--text-muted);">Rekapitulasi Real-Time Cek Emosi & Jurnal Refleksi Harian Siswa</p>
+                    <p style="font-size: 0.82rem; color: var(--text-muted);">Sinkronisasi Real-Time dari Database Google Sheets</p>
                 </div>
                 <button onclick="closeDashboard()" style="background: #F1F5F9; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 1.1rem; cursor: pointer;">✕</button>
             </div>
 
-            <!-- Kartu Statistik Deteksi Dini -->
+            <!-- Kartu Statistik -->
             <div class="stat-grid">
                 <div class="stat-card">
                     <div class="num" id="stat-total">0</div>
-                    <div class="lbl">Total Aktivitas Masuk</div>
+                    <div class="lbl">Total Data Masuk</div>
                 </div>
                 <div class="stat-card alert">
                     <div class="num" id="stat-alert">0</div>
@@ -628,23 +627,22 @@
                 </div>
                 <div class="stat-card">
                     <div class="num" id="stat-journal">0</div>
-                    <div class="lbl">📖 Jurnal Refleksi Masuk</div>
+                    <div class="lbl">📖 Jurnal Refleksi</div>
                 </div>
             </div>
 
-            <!-- Baris Filter & Tombol Aksi Guru -->
+            <!-- Baris Filter & Aksi -->
             <div class="filter-bar">
-                <select id="filter-type" class="input-field" style="width: auto; padding: 8px 14px; font-size: 0.85rem;" onchange="loadDashboardData()">
+                <select id="filter-type" class="input-field" style="width: auto; padding: 8px 14px; font-size: 0.85rem;" onchange="renderTable()">
                     <option value="ALL">🔍 Tampilkan Semua Data</option>
-                    <option value="ALERT">⚠️ Hanya Siswa Perlu Perhatian (Cemas/Sedih/Marah)</option>
+                    <option value="ALERT">⚠️ Hanya Siswa Perlu Perhatian</option>
                     <option value="Cek Emosi">😊 Hanya Cek Emosi</option>
                     <option value="Jurnal Harian">📖 Hanya Jurnal Harian</option>
                 </select>
 
                 <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button class="chip" onclick="loadDemoData()" style="background: #FEF3C7; color: #92400E; padding: 8px 12px;">✨ Isi Data Simulasi Sidang</button>
+                    <button class="chip" onclick="loadDashboardData()" style="background: #E0F2FE; color: #0369A1; padding: 8px 12px;">🔄 Segarkan Data</button>
                     <button class="chip" onclick="exportCSV()" style="background: #DCFCE7; color: #166534; padding: 8px 12px;">📥 Unduh Excel (CSV)</button>
-                    <button class="chip" onclick="clearData()" style="background: #FFE4E6; color: #9F1239; padding: 8px 12px;">🗑️ Hapus Semua</button>
                 </div>
             </div>
 
@@ -670,8 +668,8 @@
         <header>
             <div class="top-bar">
                 <div class="badge-user" id="display-user">👤 Memuat...</div>
-                <button class="sound-btn" id="sound-toggle" onclick="toggleZenSound()">
-                    🎵 Suara Alam Tenang: Nonaktif
+                <button class="sound-btn" id="sound-toggle" onclick="toggleRainSound()">
+                    🌧️ Suara Hujan Tenang: Nonaktif
                 </button>
             </div>
             <h1>Ruang Tenang BK 🌿</h1>
@@ -684,7 +682,7 @@
         </div>
 
         <div class="grid-2">
-            <!-- FITUR 1: CEK EMOSI PINTAR -->
+            <!-- FITUR 1: CEK EMOSI -->
             <div class="glass-card">
                 <div class="section-title">😊 Bagaimana Perasaanmu Hari Ini?</div>
                 <div class="section-desc">Pilih satu emoji yang paling mewakili suasana hatimu saat ini.</div>
@@ -715,7 +713,7 @@
                 <div id="affirmation-box" class="affirmation-box"></div>
             </div>
 
-            <!-- FITUR 2: TERAPI PERNAPASAN INTERAKTIF -->
+            <!-- FITUR 2: TERAPI PERNAPASAN -->
             <div class="glass-card">
                 <div class="section-title">🫁 Jeda Napas Terpandu</div>
                 <div class="section-desc">Ikuti gerakan lingkaran cahaya untuk merilekskan detak jantungmu.</div>
@@ -734,7 +732,7 @@
             </div>
         </div>
 
-        <!-- FITUR 3: JURNAL REFLEKSI HARIAN -->
+        <!-- FITUR 3: JURNAL REFLEKSI -->
         <div class="glass-card">
             <div class="section-title">📖 Jurnal & Refleksi Pikiran</div>
             <div class="section-desc">Bingung mau mulai menulis dari mana? Klik salah satu ide kalimat di bawah ini:</div>
@@ -746,7 +744,7 @@
                 <button class="chip" onclick="insertPrompt('Untuk membuat perasaanku lebih baik hari ini, aku akan... ')">🌱 Rencana positifku</button>
             </div>
 
-            <textarea id="journal-input" placeholder="Tumpahkan isi pikiran atau ceritamu di sini dengan bebas. Catatanmu hanya dapat dibaca oleh Guru BK untuk membantumu..."></textarea>
+            <textarea id="journal-input" placeholder="Tumpahkan isi pikiran atau ceritamu di sini dengan bebas. Catatanmu hanya dapat dibaca oleh Guru BK..."></textarea>
             
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                 <span id="save-status" style="font-size: 0.88rem; font-weight: 600; color: var(--success);"></span>
@@ -776,7 +774,9 @@
     </div>
 
     <script>
-        /* --- 1. SISTEM IDENTITAS SISWA --- */
+        // URL GOOGLE APPS SCRIPT BACKEND KAMU
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzew7LHakPAB5ROsimIUf_2azbYmCehaZPr-lBen48TKobZvoru6Kmtq_i8RQyImeXqaQ/exec';
+
         window.onload = function() {
             const savedName = localStorage.getItem('rt_name');
             const savedClass = localStorage.getItem('rt_class');
@@ -809,7 +809,6 @@
             location.reload();
         }
 
-        /* --- 2. KUTIPAN MOTIVASI HARIAN --- */
         const quotes = [
             "\"Menyadari apa yang kamu rasakan adalah langkah pertama untuk menjadi lebih kuat dan tenang.\"",
             "\"Tidak apa-apa jika hari ini terasa berat. Tarik napas perlahan, kamu tidak sendirian.\"",
@@ -822,7 +821,6 @@
             document.getElementById('daily-quote').innerText = quotes[quoteIdx];
         }
 
-        /* --- 3. CEK EMOSI & AFIRMASI PINTAR --- */
         const moodResponses = {
             'Senang 😄': "🌟 <strong>Ikut bahagia mendengarnya!</strong> Pertahankan energi positifmu hari ini. Jangan lupa tuliskan hal yang membuatmu bersyukur di jurnal bawah ya!",
             'Tenang 😌': "🌿 <strong>Ketenangan yang luar biasa.</strong> Pikiran yang damai membantumu fokus belajar dan beraktivitas dengan nyaman hari ini.",
@@ -832,18 +830,16 @@
         };
 
         function selectMood(mood, statusLevel, el) {
-            const name = localStorage.getItem('rt_name');
             document.querySelectorAll('.mood-item').forEach(item => item.classList.remove('active'));
             el.classList.add('active');
 
             const box = document.getElementById('affirmation-box');
             box.style.display = 'block';
-            box.innerHTML = `${moodResponses[mood]}<br><small style="color:#64748B; display:block; margin-top:6px;">✓ Pilihan emosimu telah tercatat untuk Guru BK.</small>`;
+            box.innerHTML = `${moodResponses[mood]}<br><small style="color:#64748B; display:block; margin-top:6px;">✓ Pilihan emosimu telah terkirim ke sistem Guru BK.</small>`;
 
             logSubmission("Cek Emosi", mood, statusLevel);
         }
 
-        /* --- 4. LATIHAN PERNAPASAN INTERAKTIF --- */
         let breathInterval = null;
         let isBreathing = false;
 
@@ -904,7 +900,6 @@
             }, 1000);
         }
 
-        /* --- 5. JURNAL HARIAN & PROMPT --- */
         function insertPrompt(text) {
             const area = document.getElementById('journal-input');
             area.value = area.value ? area.value + "\n" + text : text;
@@ -919,7 +914,6 @@
                 return;
             }
 
-            // Deteksi kata kunci sedih/cemas otomatis pada jurnal
             const lower = text.toLowerCase();
             const isAlert = lower.includes('cemas') || lower.includes('takut') || lower.includes('sedih') || lower.includes('marah') || lower.includes('stres') || lower.includes('bully') || lower.includes('capek');
             
@@ -927,54 +921,126 @@
 
             document.getElementById('journal-input').value = "";
             const status = document.getElementById('save-status');
-            status.innerText = `✨ Terima kasih ${name}, catatan jurnalmu berhasil dikirim ke Dasbor Guru BK!`;
+            status.innerText = `✨ Terima kasih ${name}, catatan jurnalmu berhasil dikirim ke Google Sheets Guru BK!`;
             setTimeout(() => { status.innerText = ""; }, 4500);
         }
 
-        /* --- 6. TERAPI SUARA ALAM / ZEN SYNTH (WEB AUDIO API) --- */
-        let audioCtx = null;
-        let isPlayingSound = false;
-        let soundNodes = [];
-
-        function toggleZenSound() {
-            const btn = document.getElementById('sound-toggle');
-            if (!isPlayingSound) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                // Harmoni Drone Zen Lembut (432Hz & 216Hz)
-                const freqs = [216, 324, 432];
-                freqs.forEach(f => {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(f, audioCtx.currentTime);
-                    gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.start();
-                    soundNodes.push(osc);
-                });
-                isPlayingSound = true;
-                btn.innerText = "🎵 Suara Alam Tenang: Aktif";
-                btn.classList.add('playing');
-            } else {
-                soundNodes.forEach(n => n.stop());
-                soundNodes = [];
-                if (audioCtx) audioCtx.close();
-                isPlayingSound = false;
-                btn.innerText = "🎵 Suara Alam Tenang: Nonaktif";
-                btn.classList.remove('playing');
-            }
-        }
-
-        /* --- 7. DATABASE LOKAL & DASHBOARD GURU BK (SANDI: putri123) --- */
+        // FUNGSI PENGIRIMAN DATA KE GOOGLE SHEETS (POST)
         function logSubmission(type, content, level) {
             const name = localStorage.getItem('rt_name') || 'Siswa';
             const className = localStorage.getItem('rt_class') || '-';
-            const timestamp = new Date().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' });
+            const waktu = new Date().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' });
 
-            let submissions = JSON.parse(localStorage.getItem('rt_submissions')) || [];
-            submissions.unshift({ timestamp, name, className, type, content, level });
-            localStorage.setItem('rt_submissions', JSON.stringify(submissions));
+            const payload = { waktu, nama: name, kelas: className, type, content };
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).catch(err => console.log('Sync error:', err));
+        }
+
+        /* --- GENERATOR SUARA HUJAN ALAMI YANG MENENANGKAN (WEB AUDIO API) --- */
+        let audioCtx = null;
+        let isPlayingRain = false;
+        let rainGainNode = null;
+        let rainSources = [];
+
+        function toggleRainSound() {
+            const btn = document.getElementById('sound-toggle');
+
+            if (!isPlayingRain) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const sampleRate = audioCtx.sampleRate;
+                const bufferSize = sampleRate * 4; // Siklus 4 detik stereo halus
+                const rainBuffer = audioCtx.createBuffer(2, bufferSize, sampleRate);
+
+                // Buat tekstur Pink/Brown Noise (suara rintik hujan hangat & lembut di dedaunan)
+                for (let ch = 0; ch < 2; ch++) {
+                    const output = rainBuffer.getChannelData(ch);
+                    let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+                    for (let i = 0; i < bufferSize; i++) {
+                        const white = Math.random() * 2 - 1;
+                        b0 = 0.99886 * b0 + white * 0.0555179;
+                        b1 = 0.99332 * b1 + white * 0.0750759;
+                        b2 = 0.96900 * b2 + white * 0.1538520;
+                        b3 = 0.86650 * b3 + white * 0.3104856;
+                        b4 = 0.55000 * b4 + white * 0.5329522;
+                        b5 = -0.7616 * b5 - white * 0.0168980;
+                        output[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.035;
+                        b6 = white * 0.115926;
+                    }
+                }
+
+                // Lapisan 1: Suara Hujan Utama yang Redup & Hangat
+                const mainRain = audioCtx.createBufferSource();
+                mainRain.buffer = rainBuffer;
+                mainRain.loop = true;
+
+                const lowpass = audioCtx.createBiquadFilter();
+                lowpass.type = 'lowpass';
+                lowpass.frequency.setValueAtTime(950, audioCtx.currentTime);
+
+                // Lapisan 2: Rintik Lembut di Kejauhan (ekstra detail alami)
+                const softPatter = audioCtx.createBufferSource();
+                softPatter.buffer = rainBuffer;
+                softPatter.loop = true;
+
+                const bandpass = audioCtx.createBiquadFilter();
+                bandpass.type = 'bandpass';
+                bandpass.frequency.setValueAtTime(1600, audioCtx.currentTime);
+                bandpass.Q.setValueAtTime(0.7, audioCtx.currentTime);
+
+                const patterGain = audioCtx.createGain();
+                patterGain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+
+                // Master Gain dengan efek Fade-In lembut (agar tidak mengagetkan)
+                rainGainNode = audioCtx.createGain();
+                rainGainNode.gain.setValueAtTime(0.01, audioCtx.currentTime);
+                rainGainNode.gain.exponentialRampToValueAtTime(0.45, audioCtx.currentTime + 1.8);
+
+                // Modulasi Alami (Efek alunan angin hujan pelan)
+                const lfo = audioCtx.createOscillator();
+                lfo.type = 'sine';
+                lfo.frequency.setValueAtTime(0.12, audioCtx.currentTime); // Mengalun tiap ~8 detik
+                const lfoGain = audioCtx.createGain();
+                lfoGain.gain.setValueAtTime(180, audioCtx.currentTime);
+                lfo.connect(lfoGain);
+                lfoGain.connect(lowpass.frequency);
+
+                // Hubungkan semua rangkaian suara
+                mainRain.connect(lowpass);
+                lowpass.connect(rainGainNode);
+
+                softPatter.connect(bandpass);
+                bandpass.connect(patterGain);
+                patterGain.connect(rainGainNode);
+
+                rainGainNode.connect(audioCtx.destination);
+
+                mainRain.start();
+                softPatter.start();
+                lfo.start();
+
+                rainSources = [mainRain, softPatter, lfo];
+                isPlayingRain = true;
+                btn.innerText = "🌧️ Suara Hujan Tenang: Aktif";
+                btn.classList.add('playing');
+            } else {
+                // Fade out lembut saat dimatikan
+                if (rainGainNode && audioCtx) {
+                    rainGainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+                    setTimeout(() => {
+                        rainSources.forEach(src => { try { src.stop(); } catch(e){} });
+                        rainSources = [];
+                        if (audioCtx) audioCtx.close();
+                    }, 600);
+                }
+                isPlayingRain = false;
+                btn.innerText = "🌧️ Suara Hujan Tenang: Nonaktif";
+                btn.classList.remove('playing');
+            }
         }
 
         function openPassModal() {
@@ -1002,12 +1068,28 @@
             document.getElementById('dashboard-modal').classList.add('hidden');
         }
 
-        function loadDashboardData() {
+        let cachedSubmissions = [];
+
+        // FUNGSI MENARIK DATA DARI GOOGLE SHEETS UNTUK DASBOR (GET)
+        async function loadDashboardData() {
+            const tbody = document.getElementById('dashboard-data-list');
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 25px; color:#64748B;">Menarik data terbaru dari Google Sheets... ⏳</td></tr>`;
+
+            try {
+                const response = await fetch(SCRIPT_URL);
+                cachedSubmissions = await response.json();
+                renderTable();
+            } catch (e) {
+                console.error(e);
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 25px; color:var(--danger);">Gagal memuat data dari server. Periksa koneksi internetmu.</td></tr>`;
+            }
+        }
+
+        function renderTable() {
             const tbody = document.getElementById('dashboard-data-list');
             const filter = document.getElementById('filter-type').value;
-            let submissions = JSON.parse(localStorage.getItem('rt_submissions')) || [];
+            let submissions = cachedSubmissions;
 
-            // Hitung Statistik
             const total = submissions.length;
             const alerts = submissions.filter(s => s.level === 'ALERT').length;
             const journals = submissions.filter(s => s.type === 'Jurnal Harian').length;
@@ -1016,14 +1098,13 @@
             document.getElementById('stat-alert').innerText = alerts;
             document.getElementById('stat-journal').innerText = journals;
 
-            // Terapkan Filter
             let filtered = submissions;
             if (filter === 'ALERT') filtered = submissions.filter(s => s.level === 'ALERT');
             else if (filter !== 'ALL') filtered = submissions.filter(s => s.type === filter);
 
             tbody.innerHTML = "";
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 25px; color:#64748B;">Belum ada data rekaman pada kategori ini.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 25px; color:#64748B;">Belum ada data rekaman siswa yang masuk di Google Sheets.</td></tr>`;
                 return;
             }
 
@@ -1043,26 +1124,13 @@
             });
         }
 
-        function loadDemoData() {
-            const demo = [
-                { timestamp: "17/10/26, 09.40", name: "Budi Santoso", className: "VII B", type: "Cek Emosi", content: "Cemas 😰", level: "ALERT" },
-                { timestamp: "17/10/26, 09.42", name: "Budi Santoso", className: "VII B", type: "Jurnal Harian", content: "Jujur, saat ini pikiranku sedang terbebani karena takut nilai ujian matematikaku turun dan mengecewakan orang tua.", level: "ALERT" },
-                { timestamp: "17/10/26, 09.15", name: "Siti Aminah", className: "VII A", type: "Cek Emosi", content: "Senang 😄", level: "SAFE" },
-                { timestamp: "17/10/26, 09.18", name: "Siti Aminah", className: "VII A", type: "Jurnal Harian", content: "Hari ini hal yang paling membuatku bersyukur adalah kelompok belajarku sangat kompak dan saling membantu.", level: "JOURNAL" },
-                { timestamp: "17/10/26, 08.50", name: "Dimas Pratama", className: "VII C", type: "Cek Emosi", content: "Sedih 😢", level: "ALERT" }
-            ];
-            localStorage.setItem('rt_submissions', JSON.stringify(demo));
-            loadDashboardData();
-        }
-
         function exportCSV() {
-            let submissions = JSON.parse(localStorage.getItem('rt_submissions')) || [];
-            if (submissions.length === 0) {
+            if (cachedSubmissions.length === 0) {
                 alert("Belum ada data untuk diunduh!");
                 return;
             }
             let csv = "Waktu,Nama Siswa,Kelas,Kategori,Status Deteksi,Isi Catatan\n";
-            submissions.forEach(s => {
+            cachedSubmissions.forEach(s => {
                 const status = s.level === 'ALERT' ? 'Perlu Perhatian' : 'Normal';
                 const cleanContent = s.content.replace(/"/g, '""').replace(/\n/g, ' ');
                 csv += `"${s.timestamp}","${s.name}","${s.className}","${s.type}","${status}","${cleanContent}"\n`;
@@ -1071,15 +1139,8 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = "Rekap_Ruang_Tenang_BK.csv";
+            a.download = "Rekap_Ruang_Tenang_BK_Cloud.csv";
             a.click();
-        }
-
-        function clearData() {
-            if (confirm("Yakin ingin menghapus seluruh data rekap siswa?")) {
-                localStorage.removeItem('rt_submissions');
-                loadDashboardData();
-            }
         }
     </script>
 </body>
